@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace ScreenshotApp
 {
@@ -32,7 +33,7 @@ namespace ScreenshotApp
 
         private void ScreenshotBtn_Click(object sender, RoutedEventArgs e)
         {
-            ScreenshotHandler.TakeScreenShot(txtPath);
+            latestScreenshot.Source = ScreenshotHandler.TakeScreenShot(txtPath);
         }
 
         private void SaveBtn_Click(object sender, RoutedEventArgs e)

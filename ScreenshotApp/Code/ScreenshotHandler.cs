@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing.Imaging;
 using System.Drawing;
 using System.Windows.Forms;
@@ -16,7 +12,7 @@ using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace ScreenshotApp.Code
 {
-    class ScreenshotHandler
+    public class ScreenshotHandler
     {
         static string fileName = "screenshot_";
         static string fileType = ".png";

@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Windows.Forms;
 using System.Drawing;
 
+
 namespace ScreenshotApp
 {
     /// <summary>
@@ -24,14 +25,21 @@ namespace ScreenshotApp
     public partial class MainWindow : Window
     {
         static string txtPath = @"K:\Screenshots\";
-
+        public static MainWindow instance;
         public MainWindow()
         {
             InitializeComponent();
             pathText.Text = txtPath;
+            this.DataContext = new CaptureCommandContext();
+            instance = this;
         }
 
         private void ScreenshotBtn_Click(object sender, RoutedEventArgs e)
+        {
+            CaptureScreen();
+        }
+
+        public void CaptureScreen()
         {
             ScreenshotData data = ScreenshotHandler.TakeScreenShot(txtPath, (bool)saveCheckBox.IsChecked);
             latestScreenshot.Source = data.imageSource;
@@ -62,4 +70,30 @@ namespace ScreenshotApp
 
         }
     }
+
+    public class CaptureKey : ICommand
+    {
+        public event EventHandler CanExecuteChanged;
+
+        public bool CanExecute(object parameter)
+        {
+            return true;
+        }
+
+        public void Execute(object parameter)
+        {
+            MainWindow.instance.CaptureScreen();
+        }
+    }
+    public class CaptureCommandContext
+    { 
+        public ICommand captureCommand
+        {
+            get
+            {
+                return new CaptureKey();
+            }
+        }
+    }
+
 }

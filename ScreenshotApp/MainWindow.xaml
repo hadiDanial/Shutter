@@ -4,8 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ScreenshotApp"
+        xmlns:commands="clr-namespace:ScreenshotApp.Code"
         mc:Ignorable="d"
-        Title="Shutter" Height="234.289" Width="667.667" MinWidth="550" MinHeight="500">
+        Title="Shutter" Height="234.289" Width="667.667" MinWidth="550" MinHeight="500"
+        >
+    <Window.InputBindings>
+        <KeyBinding Gesture="Alt+S" Command="{Binding captureCommand}" HotkeyManager.RegisterGlobalHotkey="True" />
+    </Window.InputBindings>
+
     <Grid>
 
 
@@ -16,4 +22,5 @@
         <CheckBox x:Name="saveCheckBox" Content="Save?" HorizontalAlignment="Right" Margin="0,22,311,0" VerticalAlignment="Top" Checked="checkBox_Checked"/>
 
     </Grid>
+    
 </Window>

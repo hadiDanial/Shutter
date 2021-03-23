@@ -50,7 +50,8 @@ namespace ScreenshotApp.Code
             string time = GetCurrentTime();
             screenshotPath = path + fileName + time + fileType;
 
-            Console.WriteLine(screenshotPath);
+            //Console.WriteLine(screenshotPath);
+
             Bitmap captureBitmap = null;
 
             ScreenshotData data;

@@ -25,6 +25,11 @@ namespace ScreenshotApp.Code
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool DeleteObject([In] IntPtr hObject);
 
+        /// <summary>
+        /// Converts from a Bitmap to an ImageSource
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <returns></returns>
         public static ImageSource ImageSourceFromBitmap(Bitmap bmp)
         {
             var handle = bmp.GetHbitmap();
@@ -35,43 +40,53 @@ namespace ScreenshotApp.Code
             finally { DeleteObject(handle); }
         }
 
-        internal static ImageSource TakeScreenShot(string path, bool saveFile = false)
+
+        /// <summary>
+        /// Takes a screenshot and optionally saves it.
+        /// Adds it to a list?
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="saveFile"></param>
+        /// <returns>All the data related to the screenshot.</returns>
+        internal static ScreenshotData TakeScreenShot(string path, bool saveFile = false)
         {
             string screenshotPath;
-            screenshotPath = GetScreenshotPath(path);
+            string time = GetCurrentTime();
+            screenshotPath = path + fileName + time + fileType;
+
             Console.WriteLine(screenshotPath);
             Bitmap captureBitmap = null;
-            try
-            {
-                Point mousePoint = new Point(Control.MousePosition.X,Control.MousePosition.Y);
-                Rectangle captureRectangle = Screen.FromPoint(mousePoint).Bounds;
 
-                captureBitmap = new Bitmap(captureRectangle.Width, captureRectangle.Height, PixelFormat.Format32bppArgb);
+            ScreenshotData data;
 
-                Graphics captureGraphics = Graphics.FromImage(captureBitmap);
+            Point mousePoint = new Point(Control.MousePosition.X, Control.MousePosition.Y);
 
+            // Returns the screen bounds of the screen that contains the mouse.
+            Rectangle captureRectangle = Screen.FromPoint(mousePoint).Bounds;
 
-                //Copying Image from The Screen
-                captureGraphics.CopyFromScreen(captureRectangle.Left, captureRectangle.Top, 0, 0, captureRectangle.Size);
+            captureBitmap = new Bitmap(captureRectangle.Width, captureRectangle.Height, PixelFormat.Format32bppArgb);
 
-                if (saveFile)
-                    captureBitmap.Save(screenshotPath, ImageFormat.Png);
+            Graphics captureGraphics = Graphics.FromImage(captureBitmap);
 
 
-            }
-            catch (Exception ex)
-            {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
-            }
-            return ImageSourceFromBitmap(captureBitmap);
+            //Copying Image from The Screen
+            captureGraphics.CopyFromScreen(captureRectangle.Left, captureRectangle.Top, 0, 0, captureRectangle.Size);
+
+            if (saveFile)
+                captureBitmap.Save(screenshotPath, ImageFormat.Png);
+
+
+            data = new ScreenshotData(captureBitmap, captureGraphics, ImageSourceFromBitmap(captureBitmap), time, path);
+
+            return data;
         }
 
-        private static string GetScreenshotPath(string path)
+
+        private static string GetCurrentTime()
         {
             DateTime date = DateTime.Now;
-            string time = date.Day.ToString("D2") + "_" + date.Month.ToString("D2") + "_" + date.TimeOfDay.Hours.ToString("D2")
+            return date.Day.ToString("D2") + "_" + date.Month.ToString("D2") + "_" + date.TimeOfDay.Hours.ToString("D2")
                 + "_" + date.TimeOfDay.Minutes.ToString("D2") + "_" + date.TimeOfDay.Seconds.ToString("D2");
-            return path + fileName + time + fileType;
         }
     }
 }

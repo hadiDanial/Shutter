@@ -33,7 +33,8 @@ namespace ScreenshotApp
 
         private void ScreenshotBtn_Click(object sender, RoutedEventArgs e)
         {
-            latestScreenshot.Source = ScreenshotHandler.TakeScreenShot(txtPath);
+            ScreenshotData data = ScreenshotHandler.TakeScreenShot(txtPath, (bool)saveCheckBox.IsChecked);
+            latestScreenshot.Source = data.imageSource;
         }
 
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
@@ -52,6 +53,11 @@ namespace ScreenshotApp
         }
 
         private void pathText_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void checkBox_Checked(object sender, RoutedEventArgs e)
         {
 
         }

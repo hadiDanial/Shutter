@@ -26,11 +26,13 @@ namespace ScreenshotApp
     {
         static string txtPath = @"K:\Screenshots\";
         public static MainWindow instance;
+        CaptureList captures;
         public MainWindow()
         {
             InitializeComponent();
             pathText.Text = txtPath;
             this.DataContext = new CaptureCommandContext();
+            captures = new CaptureList();
             instance = this;
         }
 
@@ -41,11 +43,12 @@ namespace ScreenshotApp
 
         public void CaptureScreen()
         {
-            ScreenshotData data = ScreenshotHandler.TakeScreenShot(txtPath, (bool)saveCheckBox.IsChecked);
+            ScreenshotData data = ScreenshotHandler.TakeScreenShot(txtPath);
             latestScreenshot.Source = data.imageSource;
+            captures.AddCapture(data,txtPath, (bool)saveCheckBox.IsChecked);
         }
 
-        private void SaveBtn_Click(object sender, RoutedEventArgs e)
+        private void SavePathBtn_Click(object sender, RoutedEventArgs e)
         {
             FolderBrowserDialog openFileDlg = new FolderBrowserDialog();
             openFileDlg.ShowNewFolderButton = true;
@@ -69,8 +72,32 @@ namespace ScreenshotApp
         {
 
         }
-    }
 
+        private void NextBtn_Click(object sender, RoutedEventArgs e)
+        {
+            latestScreenshot.Source = captures.GetNext();
+        }
+        private void PrevBtn_Click(object sender, RoutedEventArgs e)
+        {
+            latestScreenshot.Source = captures.GetPrevious();
+        }
+
+        private void SaveBtn_Click(object sender, RoutedEventArgs e)
+        {
+            captures.SaveCurrentShot();
+        }
+
+        private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
+        }
+    }
+    public static class Command
+    {
+        public static RoutedCommand captureCommand = new RoutedCommand();
+        public static RoutedCommand next = new RoutedCommand();
+        public static RoutedCommand prev= new RoutedCommand();
+    }
     public class CaptureKey : ICommand
     {
         public event EventHandler CanExecuteChanged;

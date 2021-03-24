@@ -63,6 +63,8 @@ namespace ScreenshotApp.Code
 
             captureBitmap = new Bitmap(captureRectangle.Width, captureRectangle.Height, PixelFormat.Format32bppArgb);
 
+            BitmapSource src = Imaging.CreateBitmapSourceFromHBitmap(captureBitmap.GetHbitmap(), IntPtr.Zero,
+                                                    Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
             Graphics captureGraphics = Graphics.FromImage(captureBitmap);
 
 
@@ -73,7 +75,7 @@ namespace ScreenshotApp.Code
                 captureBitmap.Save(screenshotPath, ImageFormat.Png);
 
 
-            data = new ScreenshotData(captureBitmap, captureGraphics, ImageSourceFromBitmap(captureBitmap), time, path);
+            data = new ScreenshotData(captureBitmap, src, captureGraphics, ImageSourceFromBitmap(captureBitmap), time);
 
             return data;
         }

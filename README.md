@@ -7,7 +7,7 @@
 - Crop
 - Display in a list and allow the user to choose.
 - Allow the user to make a selection when taking a screenshot by using another shortcut combination.
--
+- Clear screenshots
 
 
 - ~~Display latest screenshot in the center of the app.~~

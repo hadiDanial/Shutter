@@ -1,32 +1,18 @@
-﻿using ScreenshotApp.Code;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Forms;
-using System.Drawing;
-
+using ScreenshotApp.Code;
 
 namespace ScreenshotApp
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         static string txtPath = @"K:\Screenshots\";
         public static MainWindow instance;
         CaptureList captures;
+        Image img;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -34,6 +20,7 @@ namespace ScreenshotApp
             this.DataContext = new CaptureCommandContext();
             captures = new CaptureList();
             instance = this;
+            img = new Image();
         }
 
         private void ScreenshotBtn_Click(object sender, RoutedEventArgs e)
@@ -46,6 +33,7 @@ namespace ScreenshotApp
             ScreenshotData data = ScreenshotHandler.TakeScreenShot(txtPath);
             latestScreenshot.Source = data.imageSource;
             captures.AddCapture(data,txtPath, (bool)saveCheckBox.IsChecked);
+            img.Source = data.imageSource;
         }
 
         private void SavePathBtn_Click(object sender, RoutedEventArgs e)
@@ -63,6 +51,16 @@ namespace ScreenshotApp
             }
         }
 
+        private void NextBtn_Click(object sender, RoutedEventArgs e)
+        {
+            latestScreenshot.Source = captures.GetNext();
+        }
+
+        private void PrevBtn_Click(object sender, RoutedEventArgs e)
+        {
+            latestScreenshot.Source = captures.GetPrevious();
+        }
+
         private void pathText_TextChanged(object sender, TextChangedEventArgs e)
         {
 
@@ -71,15 +69,6 @@ namespace ScreenshotApp
         private void checkBox_Checked(object sender, RoutedEventArgs e)
         {
 
-        }
-
-        private void NextBtn_Click(object sender, RoutedEventArgs e)
-        {
-            latestScreenshot.Source = captures.GetNext();
-        }
-        private void PrevBtn_Click(object sender, RoutedEventArgs e)
-        {
-            latestScreenshot.Source = captures.GetPrevious();
         }
 
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
@@ -91,36 +80,14 @@ namespace ScreenshotApp
         {
 
         }
-    }
-    public static class Command
-    {
-        public static RoutedCommand captureCommand = new RoutedCommand();
-        public static RoutedCommand next = new RoutedCommand();
-        public static RoutedCommand prev= new RoutedCommand();
-    }
-    public class CaptureKey : ICommand
-    {
-        public event EventHandler CanExecuteChanged;
 
-        public bool CanExecute(object parameter)
+        private void listView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            return true;
-        }
 
-        public void Execute(object parameter)
-        {
-            MainWindow.instance.CaptureScreen();
         }
     }
-    public class CaptureCommandContext
-    { 
-        public ICommand captureCommand
-        {
-            get
-            {
-                return new CaptureKey();
-            }
-        }
-    }
+
+    
+   
 
 }

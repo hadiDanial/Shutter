@@ -73,7 +73,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Code\CaptureCommandContext.cs" />
+    <Compile Include="Code\CaptureKey.cs" />
     <Compile Include="Code\CaptureList.cs" />
+    <Compile Include="Code\Command.cs" />
     <Compile Include="Code\ScreenshotData.cs" />
     <Compile Include="Code\ScreenshotHandler.cs" />
     <Compile Include="MainWindow.xaml.cs">
